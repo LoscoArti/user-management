@@ -11,6 +11,10 @@ class Settings(BaseSettings):
     DB_PORT: int
     DB_SERVER: str
 
+    @property
+    def sync_database_url(self) -> str:
+        return f"postgresql://{self.DB_USER}:{self.DB_PASS}@{self.DB_SERVER}:{self.DB_PORT}/{self.DB_NAME}"
+
 
 settings = Settings(_env_file=Path(__file__).parent.parent / ".env",
                     _env_file_encoding="utf-8")
