@@ -1,6 +1,4 @@
-from pathlib import Path
-
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -18,7 +16,4 @@ class Settings(BaseSettings):
             f"@{self.DB_SERVER}:{self.DB_PORT}/{self.DB_NAME}"
         )
 
-
-settings = Settings(
-    _env_file=Path(__file__).parent.parent / ".env", _env_file_encoding="utf-8"
-)
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
