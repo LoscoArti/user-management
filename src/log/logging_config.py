@@ -1,7 +1,15 @@
-import logging
+import logging.config
+import os
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+import yaml
 
-logger = logging.getLogger(__name__)
+dir_path = os.path.dirname(os.path.realpath(__file__))
+config_file = os.path.join(dir_path, "logging_config.yaml")
+
+
+with open(config_file, "rt") as f:
+    config = yaml.safe_load(f.read())
+
+
+logging.config.dictConfig(config)
+logger = logging.getLogger("development")
