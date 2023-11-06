@@ -2,3 +2,4 @@ pyproject.toml
 poetry.lock
 .env
 __pycache__
+.DS_Store
