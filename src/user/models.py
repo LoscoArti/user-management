@@ -2,16 +2,16 @@ import datetime
 import enum
 from typing import Annotated
 
-from sqlalchemy import Enum, ForeignKey, Text, text
+# from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Boolean, Enum, ForeignKey, Text, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from db.database import Base
+from database import Base
 
-intpk = Annotated[int, mapped_column(primary_key=True)]
-created_at = Annotated[
+created_timestamp = Annotated[
     datetime.datetime, mapped_column(server_default=text("TIMEZONE('utc', now())"))
 ]
-modified_at = Annotated[
+modified_timestamp = Annotated[
     datetime.datetime,
     mapped_column(
         server_default=text("TIMEZONE('utc', now())"),
@@ -29,20 +29,22 @@ class Role(enum.Enum):
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[intpk]
-    name: Mapped[str] = mapped_column(Text(30), nullable=False)
-    surname: Mapped[str]
-    username: Mapped[str]
-    phone_number: Mapped[str]
-    email: Mapped[str]
-    image_s3_path: Mapped[str]
-    is_blocked: Mapped[bool] = mapped_column(default=False)
-    created_at: Mapped[created_at] = mapped_column(default=created_at)
-    modified_at: Mapped[modified_at]
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(Text)
+    surname: Mapped[str] = mapped_column(Text, nullable=True)
+    username: Mapped[str] = mapped_column(Text, nullable=True)
+    phone_number: Mapped[str] = mapped_column(Text, nullable=True)
+    email: Mapped[str] = mapped_column(Text, nullable=True)
+    image_s3_path: Mapped[str] = mapped_column(Text, nullable=True)
+    is_blocked: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at: Mapped[created_timestamp]
+    modified_at: Mapped[modified_timestamp]
 
     role: Mapped[Role] = mapped_column(Enum(Role), nullable=False, default=Role.USER)
 
-    group_id: Mapped[int] = relationship(ForeignKey("groups.id"))
+    group_id: Mapped[int] = mapped_column(ForeignKey("groups.id"), nullable=True)
+
+    group: Mapped["Group"] = relationship("Group", back_populates="users")
 
     def __repr__(self) -> str:
         return f"<User(id={self.id}, name={self.name}"
@@ -51,6 +53,11 @@ class User(Base):
 class Group(Base):
     __tablename__ = "groups"
 
-    id: Mapped[intpk]
-    name: Mapped[str] = mapped_column(Text(50), nullable=False)
-    created_at: Mapped[created_at] = mapped_column(default=created_at)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[created_timestamp]
+
+    users: Mapped[list[User]] = relationship("User", back_populates="group")
+
+    def __repr__(self) -> str:
+        return f"<Group(id={self.id}, name={self.name})"
