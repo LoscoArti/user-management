@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+from log.logging_config import logger
+
 app = FastAPI(
     title="User Management service",
     description="Main service is responsible for registration \
@@ -9,6 +11,7 @@ app = FastAPI(
 
 @app.get("/healthcheck")
 async def health_check():
+    logger.info("Health check")
     return {"response": "Ok"}
 
 
