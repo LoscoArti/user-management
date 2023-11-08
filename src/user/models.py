@@ -34,7 +34,6 @@ class User(Base):
         UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
-        unique=True,
         nullable=False,
     )
     name: Mapped[str] = mapped_column(Text)
