@@ -1,4 +1,6 @@
+import sys
 from logging.config import fileConfig
+from pathlib import Path
 
 from sqlalchemy import engine_from_config, pool
 
@@ -7,22 +9,25 @@ from src.config import settings
 from src.database import Base
 from src.user import models  # noqa
 
-# from sqlalchemy.engine import Connection
-# from sqlalchemy.ext.asyncio import async_engine_from_config
+sys.path.append(str(Path(__file__).resolve().parents[2] / "src"))
 
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
+section = config.config_ini_section
+config.set_section_option(section, "DB_HOST", str(settings.DB_HOST))
+config.set_section_option(section, "DB_PORT", str(settings.DB_PORT))
+config.set_section_option(section, "DB_USER", str(settings.DB_USER))
+config.set_section_option(section, "DB_NAME", str(settings.DB_NAME))
+config.set_section_option(section, "DB_PASS", str(settings.DB_PASS))
+
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
-config = context.config
-current_url = config.get_main_option("sqlalchemy.url", None)
-if not current_url:
-    config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+
 
 # add your model's MetaData object here
 # for 'autogenerate' support
