@@ -17,11 +17,11 @@ sys.path.append(str(Path(__file__).resolve().parents[2] / "src"))
 config = context.config
 
 section = config.config_ini_section
-config.set_section_option(section, "DB_HOST", str(settings.DB_HOST))
+config.set_section_option(section, "DB_HOST", settings.DB_HOST)
 config.set_section_option(section, "DB_PORT", str(settings.DB_PORT))
-config.set_section_option(section, "DB_USER", str(settings.DB_USER))
-config.set_section_option(section, "DB_NAME", str(settings.DB_NAME))
-config.set_section_option(section, "DB_PASS", str(settings.DB_PASS))
+config.set_section_option(section, "DB_USER", settings.DB_USER)
+config.set_section_option(section, "DB_NAME", settings.DB_NAME)
+config.set_section_option(section, "DB_PASS", settings.DB_PASS)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
