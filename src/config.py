@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASS: str
     DB_PORT: int
+    secret_key: str
 
     @property
     def DATABASE_URL_asyncpg(self):
