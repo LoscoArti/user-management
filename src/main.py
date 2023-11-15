@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+from auth import router as auth_router
 from log.logging_config import logger
 
 app = FastAPI(
@@ -14,6 +15,8 @@ async def health_check():
     logger.info("Health check")
     return {"response": "Ok"}
 
+
+app.include_router(auth_router.router)
 
 if __name__ == "__main__":
     import uvicorn

@@ -38,6 +38,7 @@ class User(Base):
     username: Mapped[str] = mapped_column(Text, nullable=True)
     phone_number: Mapped[str] = mapped_column(Text, nullable=True)
     email: Mapped[str] = mapped_column(Text)
+    password: Mapped[str] = mapped_column(Text)
     image_s3_path: Mapped[str] = mapped_column(Text, nullable=True)
     is_blocked: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[created_timestamp]
