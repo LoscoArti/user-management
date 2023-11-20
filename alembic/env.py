@@ -7,7 +7,7 @@ from sqlalchemy import engine_from_config, pool
 from alembic import context
 from src.config import settings
 from src.database import Base
-from src.user.models import *  # noqa
+from src.user.models import Group, User  # noqa
 
 sys.path.append(str(Path(__file__).resolve().parents[2] / "src"))
 
