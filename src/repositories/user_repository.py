@@ -1,9 +1,12 @@
+import uuid
 from typing import Optional
 
+from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from auth.utils import get_hashed_password, verify_password
+from src.user.schemas import UserUpdateSchema
 from user.models import User
 
 
@@ -50,3 +53,31 @@ class UserRepository:
             query = query.filter(getattr(User, attr) == value)
         result = await self.db_session.execute(query)
         return result.scalars().first() is not None
+
+    async def update_user(
+        self, user_id: uuid.UUID, update_data: UserUpdateSchema
+    ) -> User:
+        user = await self.get_user_by_id(user_id)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        update_data_dict = update_data.dict(exclude_unset=True)
+
+        allowed_update_fields = ["username", "email", "name", "surname", "phone_number"]
+
+        for key in allowed_update_fields:
+            if key in update_data_dict:
+                setattr(user, key, update_data_dict[key])
+
+        self.db_session.add(user)
+        await self.db_session.commit()
+        await self.db_session.refresh(user)
+        return user
+
+    async def delete_user(self, user_id: uuid.UUID) -> None:
+        user = await self.get_user_by_id(user_id)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        await self.db_session.delete(user)
+        await self.db_session.commit()
