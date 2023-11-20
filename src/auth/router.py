@@ -41,12 +41,3 @@ async def refresh_token(
 ):
     token_data = await auth_service.refresh_access_token(request.refresh_token)
     return token_data
-
-
-@router.post("/token", response_model=Token)
-async def login_for_access_token(
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    auth_service: AuthService = Depends(get_auth_service),
-):
-    token_data = await auth_service.authenticate_user(form_data)
-    return token_data
