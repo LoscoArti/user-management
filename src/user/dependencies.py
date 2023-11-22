@@ -4,7 +4,7 @@ from fastapi import Depends, HTTPException, status
 from jose import JWTError
 from sqlalchemy.orm import Session
 
-from auth.utils import oauth2_scheme, validate_access_token
+from auth.utils import oauth2_scheme, validate_token
 from database import get_session
 from src.repositories.user_repository import get_user_by_id
 from user.models import Role, User
@@ -19,7 +19,7 @@ async def get_current_user(
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = validate_access_token(token)
+        payload = validate_token(token)
         user_id: str = payload.get("sub")
         if user_id is None:
             raise credentials_exception

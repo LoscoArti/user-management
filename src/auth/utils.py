@@ -23,9 +23,7 @@ def verify_password(password: str, hashed_pass: str) -> bool:
     return password_context.verify(password, hashed_pass)
 
 
-def create_access_token(
-    data: dict, expires_delta: timedelta = timedelta(minutes=30)
-) -> str:
+def create_token(data: dict, expires_delta: timedelta) -> str:
     to_encode = data.copy()
     expire = datetime.utcnow() + expires_delta
     to_encode.update({"exp": expire})
@@ -34,31 +32,11 @@ def create_access_token(
     return encoded_jwt
 
 
-def create_refresh_token(
-    data: dict, expires_delta: timedelta = timedelta(days=7)
-) -> str:
-    to_encode = data.copy()
-    expire = datetime.utcnow() + expires_delta
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
-
-
-def validate_access_token(token: str) -> dict:
+def validate_token(token: str) -> dict:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         if payload.get("exp") < datetime.now(tz=timezone.utc).timestamp():
-            raise HTTPException(status_code=401, detail="Access token expired")
-        return payload
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-
-def validate_refresh_token(token: str) -> dict:
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        if payload.get("exp") < datetime.now(tz=timezone.utc).timestamp():
-            raise HTTPException(status_code=401, detail="Refresh token expired")
+            raise HTTPException(status_code=401, detail="Token expired")
         return payload
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
