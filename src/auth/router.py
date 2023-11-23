@@ -1,31 +1,39 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
 
-from auth import service
 from auth.schemas import RefreshTokenRequest, Token, UserModel
-from database import get_session
+from auth.service import AuthService
+from src.repositories.user_repository import UserRepository
 
 router = APIRouter(tags=["auth"], prefix="/auth")
 
 
 @router.post("/signup", response_model=UserModel)
-async def create_user(request: UserModel, db: Session = Depends(get_session)):
-    new_user = await service.create_new_user(request, db)
+async def create_user(
+    request: UserModel, user_repository: UserRepository = Depends(UserRepository)
+):
+    auth_service = AuthService(user_repository)
+    new_user = await auth_service.create_new_user(request=request)
     return new_user
 
 
 @router.post("/login", response_model=Token)
 async def login_user(
-    form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_session)
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    user_repository: UserRepository = Depends(UserRepository),
 ):
-    token_data = await service.authenticate_user(form_data, db)
+    auth_service = AuthService(user_repository)
+    token_data = await auth_service.authenticate_user(form_data=form_data)
     return token_data
 
 
 @router.post("/refresh-token", response_model=Token)
 async def refresh_token(
-    request: RefreshTokenRequest, db: Session = Depends(get_session)
+    request: RefreshTokenRequest,
+    user_repository: UserRepository = Depends(UserRepository),
 ):
-    token_data = await service.refresh_access_token(request.refresh_token, db)
+    auth_service = AuthService(user_repository)
+    token_data = await auth_service.refresh_access_token(
+        refresh_token=request.refresh_token
+    )
     return token_data
