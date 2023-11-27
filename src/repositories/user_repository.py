@@ -96,7 +96,7 @@ class UserRepository:
             query = query.filter(User.group_id == group_id)
 
         if filter_by_name:
-            name_filter = "%" + filter_by_name + "%"
+            name_filter = f"%{filter_by_name}%"
             query = query.filter(User.name.ilike(name_filter))
 
         result = await self.db.execute(query)
