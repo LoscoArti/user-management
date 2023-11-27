@@ -35,10 +35,10 @@ class User(Base):
     )
     name: Mapped[str] = mapped_column(Text)
     surname: Mapped[str] = mapped_column(Text, nullable=True)
-    username: Mapped[str] = mapped_column(Text, nullable=True)
+    username: Mapped[str] = mapped_column(Text)
     phone_number: Mapped[str] = mapped_column(Text, nullable=True)
     email: Mapped[str] = mapped_column(Text)
-    password: Mapped[str] = mapped_column(Text)
+    hashed_password: Mapped[str] = mapped_column(Text)
     image_s3_path: Mapped[str] = mapped_column(Text, nullable=True)
     is_blocked: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[created_timestamp]
@@ -51,7 +51,7 @@ class User(Base):
     group: Mapped["Group"] = relationship("Group", back_populates="users")
 
     def __repr__(self) -> str:
-        return f"<User(id={self.id}, name={self.name}"
+        return f"User(id={self.id}, name={self.name}"
 
 
 class Group(Base):
@@ -64,4 +64,4 @@ class Group(Base):
     users: Mapped[list[User]] = relationship("User", back_populates="group")
 
     def __repr__(self) -> str:
-        return f"<Group(id={self.id}, name={self.name})"
+        return f"Group(id={self.id}, name={self.name})"
