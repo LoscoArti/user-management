@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from auth.router import router as auth_router
-from log.logging_config import logger
+from log.logging_config import dev_logger
 from user.router import router as user_router
 
 app = FastAPI(
@@ -13,7 +13,7 @@ app = FastAPI(
 
 @app.get("/healthcheck")
 async def health_check():
-    logger.info("Health check")
+    dev_logger.info("Health check")
     return {"response": "Ok"}
 
 

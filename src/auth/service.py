@@ -3,6 +3,7 @@ from datetime import timedelta
 from fastapi import HTTPException, status
 
 from auth import utils
+from auth.utils import add_token_to_blacklist, is_token_blacklisted
 from src.repositories.user_repository import UserRepository
 from user.models import User
 
@@ -48,12 +49,19 @@ class AuthService:
         }
 
     async def refresh_access_token(self, refresh_token: str) -> dict:
+        if await is_token_blacklisted(refresh_token):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Token is blacklisted"
+            )
+
         payload = utils.validate_token(refresh_token)
         user_id = payload.get("sub")
 
         user = await self.user_repository.get_user_by_id(user_id)
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
+
+        await add_token_to_blacklist(refresh_token, expiry_time_in_seconds=60 * 30)
 
         new_access_token = utils.create_token(
             data={

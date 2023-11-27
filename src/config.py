@@ -9,6 +9,9 @@ class Settings(BaseSettings):
     DB_PORT: int
     secret_key: str
     ALGORITHM: str
+    REDIS_HOST: str
+    REDIS_PORT: int
+    REDIS_DB: int
 
     @property
     def DATABASE_URL_asyncpg(self):
