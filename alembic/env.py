@@ -9,7 +9,9 @@ from src.config import settings
 from src.database import Base
 from src.user.models import Group, User  # noqa
 
-sys.path.append(str(Path(__file__).resolve().parents[2] / "src"))
+src_dir = Path(__file__).resolve().parents[1] / "src"
+sys.path.append(str(src_dir))
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

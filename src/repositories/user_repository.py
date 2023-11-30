@@ -5,10 +5,10 @@ from fastapi import Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from auth.utils import get_hashed_password, verify_password
+from src.auth.utils import get_hashed_password, verify_password
 from src.database import get_session
+from src.user.models import User
 from src.user.schemas import UserUpdateSchema
-from user.models import User
 
 
 class UserRepository:

@@ -7,7 +7,7 @@ from sqlalchemy import Boolean, Enum, ForeignKey, Text, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from database import Base
+from src.database import Base
 
 created_timestamp = Annotated[
     datetime.datetime, mapped_column(server_default=text("TIMEZONE('utc', now())"))

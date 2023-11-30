@@ -4,10 +4,10 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, Query
 
 from src.repositories.user_repository import UserRepository
-from user.dependencies import get_current_user
-from user.models import User
-from user.schemas import UserDisplaySchema, UserUpdateSchema
-from user.service import UserService
+from src.user.dependencies import get_current_user
+from src.user.models import User
+from src.user.schemas import UserDisplaySchema, UserUpdateSchema
+from src.user.service import UserService
 
 router = APIRouter(tags=["user"], prefix="/user")
 
