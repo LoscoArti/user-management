@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from src.auth.router import router as auth_router
-from src.log.logging_config import logger
+from src.aws.router import router as aws_router
 from src.user.router import router as user_router
 
 app = FastAPI(
@@ -13,12 +13,12 @@ app = FastAPI(
 
 @app.get("/healthcheck")
 async def health_check():
-    logger.info("Health check")
     return {"response": "Ok"}
 
 
 app.include_router(auth_router)
 app.include_router(user_router)
+app.include_router(aws_router)
 
 if __name__ == "__main__":
     import uvicorn
