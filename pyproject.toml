@@ -23,6 +23,9 @@ bcrypt = "^4.0.1"
 pydantic = {extras = ["email"], version = "^2.5.0"}
 python-multipart = "^0.0.6"
 redis = "^5.0.1"
+httpx = "^0.25.2"
+pytest = "^7.4.3"
+aioboto3 = "^12.0.0"
 
 [tool.poetry.dev-dependencies]
 black = "^21.10b1"

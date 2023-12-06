@@ -12,6 +12,10 @@ class Settings(BaseSettings):
     REDIS_HOST: str
     REDIS_PORT: int
     REDIS_DB: int
+    AWS_ACCESS_KEY_ID: str
+    AWS_SECRET_ACCESS_KEY: str
+    AWS_REGION_NAME: str
+    AWS_S3_BUCKET_NAME: str
 
     @property
     def DATABASE_URL_asyncpg(self):
