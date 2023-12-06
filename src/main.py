@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 
-from auth.router import router as auth_router
-from log.logging_config import logger
-from user.router import router as user_router
+from src.auth.router import router as auth_router
+from src.log.logging_config import logger
+from src.user.router import router as user_router
 
 app = FastAPI(
     title="User Management service",

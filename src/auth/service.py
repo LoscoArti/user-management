@@ -2,10 +2,10 @@ from datetime import timedelta
 
 from fastapi import HTTPException, status
 
-from auth import utils
-from auth.redis import add_token_to_blacklist, is_token_blacklisted
+from src.auth import utils
+from src.auth.redis import add_token_to_blacklist, is_token_blacklisted
 from src.repositories.user_repository import UserRepository
-from user.models import User
+from src.user.models import User
 
 
 class AuthService:

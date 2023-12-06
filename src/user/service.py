@@ -5,8 +5,8 @@ from fastapi import HTTPException
 
 from src.repositories.user_repository import UserRepository
 from src.user.dependencies import can_access_user_data
+from src.user.models import Role, User
 from src.user.schemas import UserUpdateSchema
-from user.models import Role, User
 
 
 class UserService:

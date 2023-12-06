@@ -4,10 +4,10 @@ from fastapi import Depends, HTTPException, status
 from jose import JWTError
 from sqlalchemy.orm import Session
 
-from auth.utils import oauth2_scheme, validate_token
-from database import get_session
+from src.auth.utils import oauth2_scheme, validate_token
+from src.database import get_session
 from src.repositories.user_repository import UserRepository
-from user.models import Role, User
+from src.user.models import Role, User
 
 
 async def get_current_user(
