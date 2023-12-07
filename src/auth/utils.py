@@ -40,3 +40,7 @@ def validate_token(token: str) -> dict:
         return payload
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
+
+
+def create_reset_link(token: str, base_url) -> str:
+    return f"{base_url}auth/reset-password/{token}"
