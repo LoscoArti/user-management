@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Header, Request
 from fastapi.security import OAuth2PasswordRequestForm
 
 from src.auth.schemas import (
@@ -58,10 +58,10 @@ async def forgot_password(
     return result
 
 
-@router.post("/reset-password/{token}}")
+@router.post("/reset-password")
 async def reset_password(
-    token: str,
     request: ResetPasswordRequest,
+    token: str = Header(...),
     user_repository: UserRepository = Depends(UserRepository),
 ):
     auth_service = AuthService(user_repository)
