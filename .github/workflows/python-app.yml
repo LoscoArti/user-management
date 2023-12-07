@@ -38,6 +38,8 @@ jobs:
     - name: Run pre-commit
       run: |
         poetry run pre-commit run --all-files
+    - name: Change working directory
+      run: cd user-management/src
     - name: Test with pytest
       run: |
-        poetry run pytest src/
+        poetry run pytest
