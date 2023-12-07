@@ -39,7 +39,7 @@ jobs:
       run: |
         poetry run pre-commit run --all-files
     - name: Change working directory
-      run: cd user-management/src
+      run: cd user-management
     - name: Test with pytest
       run: |
         poetry run pytest
