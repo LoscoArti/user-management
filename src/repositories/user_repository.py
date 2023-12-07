@@ -48,6 +48,11 @@ class UserRepository:
         result = await self.db.execute(query)
         return result.scalars().first()
 
+    async def get_user_by_email(self, email: str) -> Optional[User]:
+        query = select(User).filter_by(email=email)
+        result = await self.db.execute(query)
+        return result.scalars().first()
+
     async def verify_user_exist(self, **kwargs) -> bool:
         query = select(User)
         for attr, value in kwargs.items():
@@ -101,3 +106,13 @@ class UserRepository:
 
         result = await self.db.execute(query)
         return result.scalars().all()
+
+    async def user_reset_password(self, email: str, password: str) -> User:
+        user = await self.get_user_by_email(email)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        user.hashed_password = get_hashed_password(password)
+        self.db.add(user)
+        await self.db.commit()
+        await self.db.refresh(user)
+        return user

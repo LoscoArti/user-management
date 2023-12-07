@@ -4,6 +4,7 @@ from fastapi import HTTPException, status
 
 from src.auth import utils
 from src.auth.redis import add_token_to_blacklist, is_token_blacklisted
+from src.aws import utils as aws_utils
 from src.repositories.user_repository import UserRepository
 from src.user.models import User
 
@@ -79,3 +80,41 @@ class AuthService:
             "refresh_token": new_refresh_token,
             "token_type": "bearer",
         }
+
+    async def forgot_password(self, email: str, base_url: str):
+        try:
+            user = await self.user_repository.get_user_by_email(email=email)
+            if user:
+                access_token = utils.create_token(
+                    data={"sub": str(user.email)}, expires_delta=timedelta(minutes=10)
+                )
+                reset_link = utils.create_reset_link(
+                    token=access_token, base_url=base_url
+                )
+                await aws_utils.send_reset_email(email=email, reset_link=reset_link)
+            return {
+                "result": f"An email has been sent to {email} with a link for password reset."
+            }
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Failed to send email: {e}")
+
+    async def reset_password(self, token: str, new_password: str):
+        if await is_token_blacklisted(token):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Token is blacklisted"
+            )
+
+        try:
+            payload = utils.validate_token(token)
+            email = payload.get("sub")
+            user = await self.user_repository.user_reset_password(
+                email=email, password=new_password
+            )
+            if user:
+                await add_token_to_blacklist(token, expiry_time_in_seconds=60 * 30)
+                return {"result": "Password reset successfully"}
+
+        except Exception as e:
+            raise HTTPException(
+                status_code=500, detail=f"Failed to reset password: {e}"
+            )
