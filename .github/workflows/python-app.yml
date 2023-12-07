@@ -38,8 +38,7 @@ jobs:
     - name: Run pre-commit
       run: |
         poetry run pre-commit run --all-files
-    - name: Change working directory
-      run: cd src
     - name: Test with pytest
       run: |
-        poetry run pytest
+        cd src/
+        python -m pytest
