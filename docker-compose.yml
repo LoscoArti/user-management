@@ -14,6 +14,8 @@ services:
     volumes:
       - .:/app
       - ./log:/app/log
+    networks:
+      - mynetwork
 
   db:
     image: postgres
@@ -27,6 +29,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mynetwork
 
   redis:
     image: redis
@@ -34,7 +38,27 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    networks:
+      - mynetwork
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
 
 volumes:
-  postgres_data:
   redis_data:
+  pgadmin_data:
+  postgres_data:
