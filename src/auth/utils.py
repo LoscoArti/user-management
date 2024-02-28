@@ -44,3 +44,12 @@ def validate_token(token: str) -> dict:
 
 def create_reset_link(token: str, base_url) -> str:
     return f"{base_url}auth/reset-password/{token}"
+
+
+def create_message(user_id: str, email: str, reset_link: str) -> dict:
+    return {
+        "user_id": user_id,
+        "email_address": email,
+        "body": reset_link,
+        "published_at": datetime.now().isoformat(),
+    }
